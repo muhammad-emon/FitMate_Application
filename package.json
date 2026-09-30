@@ -1,0 +1,38 @@
+{
+  "name": "fitmate",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@expo/ngrok": "^4.1.0",
+    "@expo/vector-icons": "^15.0.2",
+    "@react-native-async-storage/async-storage": "^2.1.2",
+    "@react-navigation/bottom-tabs": "^6.6.1",
+    "@react-navigation/native": "^6.1.18",
+    "@react-navigation/native-stack": "^6.9.17",
+    "@react-navigation/stack": "^6.4.1",
+    "axios": "^1.7.9",
+    "expo": "~57.0.7",
+    "expo-linear-gradient": "~57.0.1",
+    "expo-notifications": "~57.0.6",
+    "expo-status-bar": "~57.0.1",
+    "firebase": "9.23.0",
+    "react": "19.2.3",
+    "react-native": "0.86.0",
+    "react-native-gesture-handler": "^3.1.0",
+    "react-native-gifted-charts": "^1.4.36",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "4.25.2",
+    "react-native-webview": "^13.12.5",
+    "react-native-youtube-iframe": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0"
+  },
+  "private": true
+}

@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "FitMate",
+    "slug": "fitmate",
+    "owner": "emon_28345",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "newArchEnabled": false,
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "fitmate",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0f172a"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fitmate.app"
+    },
+    "android": {
+      "package": "com.fitmate.app",
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundColor": "#121212"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [],
+    "extra": {
+      "eas": {
+        "projectId": "0a723130-3bfd-49e6-86f9-b5214de5f346"
+      }
+    }
+  }
+}
