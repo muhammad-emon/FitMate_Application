@@ -210,3 +210,16 @@ export async function deleteUserData(uid) {
   batch.delete(doc(db, 'users', uid));
   await batch.commit();
 }
+
+// --- Workout Plan ---
+
+// Saves the user's current workout plan - always overwrites 'latest' so there's only one active plan
+export async function saveWorkoutPlan(uid, plan) {
+  await setDoc(doc(db, 'users', uid, 'workoutPlans', 'latest'), plan, { merge: true });
+}
+
+// Returns the user's saved workout plan, or null if they haven't generated one yet
+export async function getWorkoutPlan(uid) {
+  const snap = await getDoc(doc(db, 'users', uid, 'workoutPlans', 'latest'));
+  return snap.exists() ? snap.data() : null;
+}

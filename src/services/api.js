@@ -1,5 +1,5 @@
 // API Service — OpenAI integration
-// Handles: AI Coach responses, Diet Plan generation
+// Handles: AI Coach responses, Diet Plan generation, Workout Plan generation
 
 import { calculateAllMetrics } from '../utils/metricsCalculator';
 
@@ -381,6 +381,66 @@ All values must be numbers rounded to 1 decimal place. No text, no markdown, jus
     };
   } catch {
     return { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0 };
+  }
+}
+
+// ─── Generate AI Workout Plan ───────────────────────────────────────────────
+// Builds a personalized workout routine using the user's profile data.
+// Returns a routine object matching the same shape as workoutSelector.js so
+// WorkoutScreen can use either source interchangeably.
+// Returns null on error so the caller can fall back to selectRoutine().
+export async function generateWorkoutPlan(profile) {
+  const goal     = profile?.goal          || 'Maintain Fitness';
+  const gender   = profile?.gender        || 'Male';
+  const age      = profile?.age           || 25;
+  const weight   = profile?.weight        || 70;
+  const height   = profile?.height        || 170;
+  const activity = profile?.activityLevel || 'moderate';
+
+  const system =
+    'You are an expert certified personal trainer. ' +
+    'Create personalized workout plans as strict JSON only — no markdown, no commentary, no extra text.';
+
+  const user =
+`Create a weekly workout routine for the following user:
+- Goal: ${goal}
+- Gender: ${gender}
+- Age: ${age}
+- Weight: ${weight} kg
+- Height: ${height} cm
+- Activity Level: ${activity}
+
+Return ONLY valid JSON in exactly this format (no markdown fences):
+{
+  "goal": "${goal}",
+  "name": "<short creative routine name>",
+  "description": "<2 sentence description of why this plan suits the user>",
+  "daysPerWeek": <number 3-5>,
+  "exercises": [
+    {
+      "name": "<exercise name>",
+      "muscleGroup": "<primary muscle group>",
+      "sets": <number>,
+      "reps": "<rep range e.g. 8-12 or 30s>",
+      "rest": "<rest period e.g. 60s>",
+      "youtubeId": null
+    }
+  ]
+}
+
+Include 6-9 exercises. Keep the routine realistic and appropriate for the user's activity level. youtubeId must always be null.`;
+
+  try {
+    const raw     = await callOpenAI(system, user, 900, MODEL_JSON);
+    const cleaned = raw.replace(/```json|```/g, '').trim();
+    // Extract the JSON object in case the model adds any prefix text
+    const match   = cleaned.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('No JSON found in response');
+    return JSON.parse(match[0]);
+  } catch (err) {
+    // Caller will fall back to selectRoutine() — log so we can debug if needed
+    console.warn('[generateWorkoutPlan] Error:', err.message);
+    return null;
   }
 }
 
