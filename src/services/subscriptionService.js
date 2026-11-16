@@ -47,6 +47,12 @@ export async function getSubscription(uid) {
   }
 }
 
+// Convenience helper — returns just the tier string ('free' | 'pro' | 'ultra')
+export async function getSubscriptionTier(uid) {
+  const sub = await getSubscription(uid);
+  return (sub?.tier || 'free').toLowerCase();
+}
+
 // Upgrades the user to a new tier and wipes their usage counters
 // We reset usage on upgrade so they get a clean slate right away
 export async function upgradeTier(uid, tier) {
