@@ -5,7 +5,7 @@ import { calculateAllMetrics } from '../utils/metricsCalculator';
 
 const OPENAI_KEY = process.env.EXPO_PUBLIC_OPENAI_KEY || '';
 const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
-const MODEL_CHAT = 'gpt-3.5-turbo';   // fast, good for chat
+const MODEL_CHAT = 'gpt-4o-mini';     // fast, current model for chat
 const MODEL_JSON = 'gpt-4o-mini';     // reliable structured JSON output
 
 // Shared fetch wrapper for all OpenAI calls — keeps auth headers and request shape in one place
