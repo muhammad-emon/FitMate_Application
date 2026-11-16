@@ -2,6 +2,7 @@
 // Handles: AI Coach responses, Diet Plan generation, Workout Plan generation
 
 import { calculateAllMetrics } from '../utils/metricsCalculator';
+import { resolveYoutubeId } from '../utils/workoutSelector';
 
 const OPENAI_KEY = process.env.EXPO_PUBLIC_OPENAI_KEY || '';
 const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
@@ -436,7 +437,14 @@ Include 6-9 exercises. Keep the routine realistic and appropriate for the user's
     // Extract the JSON object in case the model adds any prefix text
     const match   = cleaned.match(/\{[\s\S]*\}/);
     if (!match) throw new Error('No JSON found in response');
-    return JSON.parse(match[0]);
+    const parsed  = JSON.parse(match[0]);
+    if (Array.isArray(parsed.exercises)) {
+      parsed.exercises = parsed.exercises.map(ex => ({
+        ...ex,
+        youtubeId: resolveYoutubeId(ex),
+      }));
+    }
+    return parsed;
   } catch (err) {
     // Caller will fall back to selectRoutine() — log so we can debug if needed
     console.warn('[generateWorkoutPlan] Error:', err.message);

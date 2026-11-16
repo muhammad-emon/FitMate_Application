@@ -31,3 +31,45 @@ export function selectRoutine(profile) {
   // Covers the 'maintain' goal and anything else we didn't explicitly handle
   return WORKOUTS.full_body;
 }
+
+// Maps an exercise (from AI generation or Firestore) to a verified YouTube tutorial video ID
+export function resolveYoutubeId(exercise) {
+  if (exercise?.youtubeId) return exercise.youtubeId;
+  const n = String(exercise?.name || '').toLowerCase();
+  const m = String(exercise?.muscleGroup || '').toLowerCase();
+
+  // Direct / keyword match against verified tutorial videos
+  if (n.includes('romanian') || n.includes('rdl')) return '7j-2vu0HMvk';
+  if (n.includes('deadlift'))                      return 'op9kVnSso6Q';
+  if (n.includes('bodyweight squat') || n.includes('air squat')) return 'aclHkVaku9U';
+  if (n.includes('squat') || n.includes('leg press')) return 'bEv6CCg2BC8';
+  if (n.includes('bench') || n.includes('chest press') || n.includes('fly')) return 'rT7DgCr-3pg';
+  if (n.includes('push-up') || n.includes('push up') || n.includes('pushup')) return '_l3ySVKYVJ8';
+  if (n.includes('pull-up') || n.includes('pull up') || n.includes('chin-up') || n.includes('pulldown')) return 'eGo4IYlbE5g';
+  if (n.includes('barbell row') || n.includes('bent over row') || n.includes('pendlay')) return 'G8l_8chR5BE';
+  if (n.includes('row'))                           return 'roCP0KfWRFk';
+  if (n.includes('overhead') || n.includes('military')) return '2yjwXTZQDDI';
+  if (n.includes('shoulder') || n.includes('lateral'))  return 'qEwKCR5JCog';
+  if (n.includes('lunge') || n.includes('split'))  return 'QOVaHwm-Q6U';
+  if (n.includes('dip') || n.includes('tricep') || n.includes('pushdown')) return '2z8JmcrW-As';
+  if (n.includes('curl') || n.includes('bicep'))   return 'roCP0KfWRFk';
+  if (n.includes('plank'))                         return 'pSHjTRCQxIw';
+  if (n.includes('crunch') || n.includes('sit-up') || n.includes('leg raise')) return '9FGilxCbdz8';
+  if (n.includes('glute') || n.includes('bridge') || n.includes('thrust')) return 'wPM8icPu6H8';
+  if (n.includes('burpee'))                        return 'dZgVxmf6jkA';
+  if (n.includes('jump rope') || n.includes('skip')) return 'u3zgHI8QnqE';
+  if (n.includes('high knee'))                     return 'tx5PGQv3Bgg';
+  if (n.includes('mountain'))                      return 'nmwgirgXLYM';
+  if (n.includes('jack'))                          return 'iSSAk4XCsRA';
+
+  // Muscle-group fallback so every AI exercise always has a tutorial video
+  if (m.includes('leg') || m.includes('quad') || m.includes('glute') || m.includes('hamstring')) return 'bEv6CCg2BC8';
+  if (m.includes('chest') || m.includes('pec'))    return 'rT7DgCr-3pg';
+  if (m.includes('back') || m.includes('lat'))     return 'roCP0KfWRFk';
+  if (m.includes('shoulder') || m.includes('delt')) return 'qEwKCR5JCog';
+  if (m.includes('arm') || m.includes('tricep') || m.includes('bicep')) return '2z8JmcrW-As';
+  if (m.includes('core') || m.includes('ab'))      return 'pSHjTRCQxIw';
+  if (m.includes('cardio'))                        return 'dZgVxmf6jkA';
+
+  return '_l3ySVKYVJ8';
+}

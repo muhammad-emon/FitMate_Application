@@ -12,7 +12,7 @@ import {
   getWorkoutPlan,
 } from '../services/firestoreService';
 import { getSubscriptionTier } from '../services/subscriptionService';
-import { selectRoutine } from '../utils/workoutSelector';
+import { selectRoutine, resolveYoutubeId } from '../utils/workoutSelector';
 import { generateWorkoutPlan } from '../services/api';
 
 // Goal -> color mapping for the routine banner
@@ -64,10 +64,9 @@ function RoutineBanner({ routine, isAIGenerated }) {
   );
 }
 
-// Individual exercise card — shows name, muscle group, sets/reps/rest, and optionally a YouTube embed
-// If youtubeId is null (AI-generated exercises), the Watch button is hidden
+// Individual exercise card — shows name, muscle group, sets/reps/rest, and a YouTube tutorial embed
 function ExerciseCard({ exercise, index, isPlaying, onPlay }) {
-  const hasVideo = !!exercise.youtubeId;
+  const videoId = resolveYoutubeId(exercise);
   return (
     // Highlight the card border green when its video is actively playing
     <View style={[styles.exerciseCard, isPlaying && styles.exerciseCardActive]}>
@@ -84,18 +83,16 @@ function ExerciseCard({ exercise, index, isPlaying, onPlay }) {
           {/* No emoji on muscle group — sprint 2 ui decision */}
           <Text style={styles.muscleGroup}>{exercise.muscleGroup}</Text>
         </View>
-        {/* Only show Watch button if the exercise has a YouTube ID */}
-        {hasVideo && (
-          <TouchableOpacity
-            style={[styles.watchBtn, isPlaying && styles.watchBtnActive]}
-            onPress={onPlay}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.watchBtnText}>
-              {isPlaying ? 'Close' : 'Watch'}
-            </Text>
-          </TouchableOpacity>
-        )}
+        {/* Toggle button — label flips between Watch and Close depending on state */}
+        <TouchableOpacity
+          style={[styles.watchBtn, isPlaying && styles.watchBtnActive]}
+          onPress={onPlay}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.watchBtnText}>
+            {isPlaying ? 'Close' : 'Watch'}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {/* Sets / reps / rest badges — no emojis, sprint 2 ui decision */}
@@ -112,11 +109,11 @@ function ExerciseCard({ exercise, index, isPlaying, onPlay }) {
       </View>
 
       {/* Embedded YouTube tutorial — only mounts when this card is active, saves bandwidth */}
-      {isPlaying && hasVideo && (
+      {isPlaying && (
         <View style={styles.playerBox}>
           <YoutubePlayer
             height={210}
-            videoId={exercise.youtubeId}
+            videoId={videoId}
             play={true}
           />
         </View>
