@@ -333,5 +333,4 @@ const styles = StyleSheet.create({
   },
   quickIcon: { fontSize: 28 },
   quickLabel: { color: '#9E9E9E', fontSize: 12, fontWeight: '600', textAlign: 'center' },
-});Weight: '600', textAlign: 'center' },
 });
